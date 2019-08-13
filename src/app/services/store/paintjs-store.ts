@@ -1,8 +1,8 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { pluck, distinctUntilChanged } from 'rxjs/operators';
 
-import { PaintJsState } from '../models/paintjs-state.interface';
-import { ActionCommand } from '../models/action-command.model';
+import { PaintJsState } from '../../models/paintjs-state.interface';
+import { ActionCommand } from '../../models/action-command.model';
 
 const state: PaintJsState = {
     currentImage: undefined,

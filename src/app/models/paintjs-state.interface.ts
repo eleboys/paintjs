@@ -1,6 +1,7 @@
 import { ActionCommand } from './action-command.model';
+import { ImageMatrix } from './image-matrix.model';
 
 export interface PaintJsState {
-    currentImage: ImageBitmap;
+    currentImage: ImageMatrix;
     commandStack: ActionCommand[];
 }

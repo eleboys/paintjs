@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { PaintJsStore } from 'src/app/services/paintjs-store';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { PaintJsStore } from 'src/app/services/store/paintjs-store';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { ActionCommand } from 'src/app/models/action-command.model';
+import { ImageService } from 'src/app/services/image/image.service';
+import { ImageMatrix } from 'src/app/models/image-matrix.model';
 
 @Component({
   selector: 'pjs-preview-area',
@@ -12,19 +15,28 @@ import { ActionCommand } from 'src/app/models/action-command.model';
 })
 export class PreviewAreaComponent implements OnInit {
 
+  @ViewChild('previewCanvas', {static: true})
+  canvasRef: ElementRef;
+
   commandStack$: Observable<ActionCommand[]>;
 
-  constructor(private store: PaintJsStore) {
+  constructor(private store: PaintJsStore,
+              private sanitizer: DomSanitizer,
+              private imageService: ImageService) {
     this.commandStack$ = store.select('commandStack');
+    store.select<ImageMatrix>('currentImage').subscribe(matrix => {
+      if (!matrix) {
+        return;
+      }
+
+      const canvas = (this.canvasRef.nativeElement as HTMLCanvasElement);
+      canvas.width = matrix.width;
+      canvas.height = matrix.height;
+      const ctx = canvas.getContext('2d');
+      ctx.putImageData(this.imageService.matrixToImageData(matrix), 0, 0);
+    });
   }
 
   ngOnInit() {
   }
-
-  addCommand() {
-    const v = this.store.value.commandStack;
-    v.push({name: 'new' + v.length, params: null});
-    // this.store.set('commandStack', v);
-  }
-
 }

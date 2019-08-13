@@ -1,3 +1,9 @@
-<div class="top-menu">
-    top-menu works!
+<div class="top-menu flex">
+    <button (click)="openFileExplorer()">Open</button>
+
+    <input type="file" 
+            class="hide" 
+            accept="image/png, image/jpeg"
+            (change)="onFileSelected($event)"
+            #fileExplorer>
 </div>
