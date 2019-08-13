@@ -1,1 +1,7 @@
-<div class="preview-area">preview-area works!</div>
+<div class="preview-area">
+    preview-area works!
+    <pre>
+        {{commandStack$|async|json}}
+    </pre>
+    <button (click)="addCommand()">add</button>
+</div>
