@@ -1,0 +1,7 @@
+export enum CommandNames {
+    Null = 'null',
+    Load = 'load',
+    Pixelate = 'pixelate',
+    Blur = 'blur',
+    Invert = 'invert'
+}

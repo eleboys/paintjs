@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { WebWorkerService } from 'src/app/services/web-worker/web-worker.service';
-import { PaintJsStore } from 'src/app/services/store/paintjs-store';
+
 import { ActionCommandService } from 'src/app/services/action-command/action-command.service';
+import { CommandNames } from 'src/app/models/command-names.enum';
 
 @Component({
   selector: 'pjs-side-bar',
@@ -10,13 +10,15 @@ import { ActionCommandService } from 'src/app/services/action-command/action-com
 })
 export class SideBarComponent implements OnInit {
 
+  commandNames = CommandNames;
+
   constructor(private commandService: ActionCommandService) {
   }
 
   ngOnInit() {
   }
 
-  command(name: string) {
-    this.commandService.executeCommand(name);
+  command(name: CommandNames) {
+    this.commandService.execute(name);
   }
 }

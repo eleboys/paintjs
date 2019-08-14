@@ -1,28 +1,28 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+
 import { PaintJsStore } from 'src/app/services/store/paintjs-store';
 import { ImageService } from 'src/app/services/image/image.service';
-import { Observable } from 'rxjs';
 import { ActionCommand } from 'src/app/models/action-command.model';
+import { ActionCommandService } from 'src/app/services/action-command/action-command.service';
+import { CommandNames } from 'src/app/models/command-names.enum';
 
 @Component({
   selector: 'pjs-top-menu',
   templateUrl: './top-menu.component.html',
   styleUrls: ['./top-menu.component.scss']
 })
-export class TopMenuComponent implements OnInit, AfterViewInit {
+export class TopMenuComponent implements OnInit {
 
   @ViewChild('fileExplorer', { static: true })
   fileExplorer: ElementRef;
 
-  commandStack$: Observable<ActionCommand[]>;
+  canUndo = false;
+  canRedo = false;
 
   constructor(private store: PaintJsStore,
+              private commandService: ActionCommandService,
               private imageService: ImageService) {
-    this.commandStack$ = this.store.select('commandStack');
-  }
-
-  ngAfterViewInit() {
-    console.log(this.fileExplorer);
+    this.subcribeToStoreChanges();
   }
 
   ngOnInit() {
@@ -39,6 +39,23 @@ export class TopMenuComponent implements OnInit, AfterViewInit {
     }
     this.imageService.blobToImageMatrix(files[0]).subscribe(matrix => {
       this.store.set('currentImage', matrix);
+      this.commandService.add(CommandNames.Load);
+    });
+  }
+
+  undo() {
+    this.commandService.undo();
+  }
+
+  redo() {
+    this.commandService.redo();
+  }
+
+  private subcribeToStoreChanges() {
+    this.store.select('commandStack').subscribe((stack: ActionCommand[]) => {
+      const i = stack.findIndex(c => c.id === this.store.value.activeCommandId);
+      this.canUndo = i >= 2;
+      this.canRedo = i <= (stack.length - 2);
     });
   }
 }

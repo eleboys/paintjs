@@ -2,29 +2,22 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { pluck, distinctUntilChanged } from 'rxjs/operators';
 
 import { PaintJsState } from '../../models/paintjs-state.interface';
-import { ActionCommand } from '../../models/action-command.model';
+import { BaseStore } from './base-store';
+import { ImageMatrix } from 'src/app/models/image-matrix.model';
+import { CommandNames } from 'src/app/models/command-names.enum';
 
+const nullMatrix = new ImageMatrix(0, 0, []);
 const state: PaintJsState = {
-    currentImage: undefined,
-    commandStack: []
+    currentImage: nullMatrix,
+    commandStack: [{ id: 'c0', name: CommandNames.Null, params: null, matrix: nullMatrix }],
+    activeCommandId: 'c0'
 };
 
-export class PaintJsStore {
-    private subject = new BehaviorSubject<PaintJsState>(state);
-    private store = this.subject.asObservable().pipe(distinctUntilChanged());
+export class PaintJsStore extends BaseStore<PaintJsState> {
 
-    get value(): PaintJsState {
-        return this.subject.value;
+    constructor() {
+        super();
+        this.subject.next(state);
     }
 
-    set(key: string, value: any) {
-        this.subject.next({
-            ...this.value,
-            [key]: value
-        });
-    }
-
-    select<T>(key: string): Observable<T> {
-        return this.store.pipe(pluck(key));
-    }
 }

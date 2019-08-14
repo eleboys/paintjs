@@ -6,6 +6,11 @@
             accept="image/png, image/jpeg"
             (change)="onFileSelected($event)"
             #fileExplorer>
-    
-    <span>{{(commandStack$|async).length}}</span>
+    <span> | </span>
+    <button (click)='undo()' [disabled]="!canUndo">Undo</button>
+    <button (click)='redo()' [disabled]="!canRedo">Redo</button>
+    <span>
+        <span *ngFor="let c of commandStack$|async"
+               [ngClass]="{underline:c.id===(activeCommandId$|async)}">{{c.id}}-{{c.name}}, </span>
+    </span>
 </div>
