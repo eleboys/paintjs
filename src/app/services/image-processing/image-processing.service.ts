@@ -115,11 +115,24 @@ export class ImageProcessingService {
     return new ImageMatrix(imgW, imgH, matrix);
   }
 
+  grayScaleFilter(matrix: ImageMatrix) {
+    for (let y = 0; y < matrix.height; y++) {
+      for (let x = 0; x < matrix.width; x++) {
+        const color = matrix.data[y][x];
+        const avg = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+        color.r = color.g = color.b = Math.floor(avg);
+        matrix.data[y][x] = color;
+      }
+    }
+
+    return new ImageMatrix(matrix.width, matrix.height, matrix.data);
+  }
+
   blurFilter(imgMatrix) {
-    const blurThreshold = 6;
+    const blurThreshold = 4;
     const imgW = imgMatrix.width;
     const imgH = imgMatrix.height;
-    const matrix = imgMatrix.data.slice(0);
+    const matrix = imgMatrix.data; //.slice(0);
 
     for (let y = 0; y < imgH; y++) {
       for (let x = 0; x < imgW; x++) {

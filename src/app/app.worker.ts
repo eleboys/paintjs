@@ -23,6 +23,8 @@ function actionFactory(name) {
       return imgProcessService.invertFilter.bind(imgProcessService);
     case CommandNames.Blur:
       return imgProcessService.blurFilter.bind(imgProcessService);
+    case CommandNames.GrayScale:
+      return imgProcessService.grayScaleFilter.bind(imgProcessService);
     default:
       return imgProcessService.nullFilter.bind(imgProcessService);
   }

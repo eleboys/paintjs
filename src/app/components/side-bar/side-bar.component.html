@@ -1,5 +1,3 @@
 <div class="side-bar flex flex-column justify-center">
-    <button (click)="command(commandNames.Pixelate)">Pixelate</button>
-    <button (click)="command(commandNames.Blur)">Blur</button>
-    <button (click)="command(commandNames.Invert)">Invert</button>
+    <button *ngFor="let c of commands" (click)="command(c.id)">{{c.name}}</button>
 </div>

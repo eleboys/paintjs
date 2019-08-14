@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PaintJsStore } from 'src/app/services/store/paintjs-store';
 
 @Component({
   selector: 'pjs-footer',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-  constructor() { }
+  currentImage$ = this.store.select('currentImage');
+
+  constructor(private store: PaintJsStore) { }
 
   ngOnInit() {
   }

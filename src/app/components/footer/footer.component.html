@@ -1,1 +1,11 @@
-<div class="footer">footer works!</div>
+<div class="footer flex justify-between">
+    <div>
+        <span>PaintJs</span>
+    </div>
+    <div>
+        <span>Author: Nima Baghdadi</span>
+    </div>
+    <div>
+        <span *ngIf="(currentImage$|async).width>0">Size: {{(currentImage$|async).width}}px * {{(currentImage$|async).height}}px</span>
+    </div>
+</div>

@@ -10,7 +10,19 @@ import { CommandNames } from 'src/app/models/command-names.enum';
 })
 export class SideBarComponent implements OnInit {
 
-  commandNames = CommandNames;
+  commands = [{
+    id: CommandNames.Pixelate,
+    name: 'Pixelate'
+  }, {
+    id: CommandNames.Blur,
+    name: 'Blur'
+  }, {
+    id: CommandNames.Invert,
+    name: 'Invert'
+  }, {
+    id: CommandNames.GrayScale,
+    name: 'Gray Scale'
+  }];
 
   constructor(private commandService: ActionCommandService) {
   }

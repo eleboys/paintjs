@@ -3,5 +3,6 @@ export enum CommandNames {
     Load = 'load',
     Pixelate = 'pixelate',
     Blur = 'blur',
-    Invert = 'invert'
+    Invert = 'invert',
+    GrayScale = 'grayscale'
 }
