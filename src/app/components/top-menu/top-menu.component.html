@@ -9,8 +9,6 @@
     <span> | </span>
     <button (click)='undo()' [disabled]="!canUndo">Undo</button>
     <button (click)='redo()' [disabled]="!canRedo">Redo</button>
-    <span>
-        <span *ngFor="let c of commandStack$|async"
-               [ngClass]="{underline:c.id===(activeCommandId$|async)}">{{c.id}}-{{c.name}}, </span>
-    </span>
+    <span> | </span>
+    <button (click)="save()" [disabled]="(currentImage$|async).width === 0">Save</button>
 </div>

@@ -16,6 +16,7 @@ export class TopMenuComponent implements OnInit {
   @ViewChild('fileExplorer', { static: true })
   fileExplorer: ElementRef;
 
+  currentImage$ = this.store.select('currentImage');
   canUndo = false;
   canRedo = false;
 
@@ -41,6 +42,10 @@ export class TopMenuComponent implements OnInit {
       this.store.set('currentImage', matrix);
       this.commandService.add(CommandNames.Load);
     });
+  }
+
+  save() {
+    this.imageService.downloadImageMatrix(this.store.value.currentImage, 'painjs.png');
   }
 
   undo() {

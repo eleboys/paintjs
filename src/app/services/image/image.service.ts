@@ -23,6 +23,23 @@ export class ImageService {
     }));
   }
 
+  imageMatrixDataURL(matrix: ImageMatrix): string {
+    const imageData = this.imageProcessingService.matrixToImageData(matrix);
+    const canvas = document.createElement('canvas');
+    canvas.width = matrix.width;
+    canvas.height = matrix.height;
+    const ctx = canvas.getContext('2d');
+    ctx.putImageData(imageData, 0, 0);
+    return canvas.toDataURL();
+  }
+
+  downloadImageMatrix(matrix: ImageMatrix, fileName: string) {
+    const link = document.createElement('a');
+    link.setAttribute('download', fileName);
+    link.setAttribute('href', this.imageMatrixDataURL(matrix));
+    link.click();
+  }
+
   getDrawingRect(width, height) {
     const rect = this.getDrawingSize(window.innerWidth - 250, window.innerHeight - 200, width, height);
     return {
