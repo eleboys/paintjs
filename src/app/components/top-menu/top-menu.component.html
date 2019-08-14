@@ -6,4 +6,6 @@
             accept="image/png, image/jpeg"
             (change)="onFileSelected($event)"
             #fileExplorer>
+    
+    <span>{{(commandStack$|async).length}}</span>
 </div>

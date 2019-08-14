@@ -8,6 +8,9 @@ import { PreviewAreaComponent } from './components/preview-area/preview-area.com
 import { FooterComponent } from './components/footer/footer.component';
 import { PaintJsStore } from './services/store/paintjs-store';
 import { ImageService } from './services/image/image.service';
+import { WebWorkerService } from './services/web-worker/web-worker.service';
+import { ImageProcessingService } from './services/image-processing/image-processing.service';
+import { ActionCommandService } from './services/action-command/action-command.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { ImageService } from './services/image/image.service';
   ],
   providers: [
     PaintJsStore,
-    ImageService
+    ImageService,
+    ImageProcessingService,
+    WebWorkerService,
+    ActionCommandService
   ],
   bootstrap: [AppComponent]
 })

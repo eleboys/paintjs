@@ -7,6 +7,7 @@ import { first } from 'rxjs/operators';
 import { ActionCommand } from 'src/app/models/action-command.model';
 import { ImageService } from 'src/app/services/image/image.service';
 import { ImageMatrix } from 'src/app/models/image-matrix.model';
+import { ImageProcessingService } from 'src/app/services/image-processing/image-processing.service';
 
 @Component({
   selector: 'pjs-preview-area',
@@ -22,7 +23,7 @@ export class PreviewAreaComponent implements OnInit {
 
   constructor(private store: PaintJsStore,
               private sanitizer: DomSanitizer,
-              private imageService: ImageService) {
+              private imageService: ImageProcessingService) {
     this.commandStack$ = store.select('commandStack');
     store.select<ImageMatrix>('currentImage').subscribe(matrix => {
       if (!matrix) {

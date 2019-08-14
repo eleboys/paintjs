@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { PaintJsStore } from 'src/app/services/store/paintjs-store';
 import { ImageService } from 'src/app/services/image/image.service';
+import { Observable } from 'rxjs';
+import { ActionCommand } from 'src/app/models/action-command.model';
 
 @Component({
   selector: 'pjs-top-menu',
@@ -12,8 +14,11 @@ export class TopMenuComponent implements OnInit, AfterViewInit {
   @ViewChild('fileExplorer', { static: true })
   fileExplorer: ElementRef;
 
+  commandStack$: Observable<ActionCommand[]>;
+
   constructor(private store: PaintJsStore,
               private imageService: ImageService) {
+    this.commandStack$ = this.store.select('commandStack');
   }
 
   ngAfterViewInit() {
