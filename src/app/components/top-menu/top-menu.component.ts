@@ -38,14 +38,14 @@ export class TopMenuComponent implements OnInit {
     if (!files || !files.length) {
       return;
     }
-    this.imageService.blobToImageMatrix(files[0]).subscribe(matrix => {
-      this.store.set('currentImage', matrix);
+    this.imageService.blobToSimpleImage(files[0]).subscribe(simage => {
+      this.store.set('currentImage', simage);
       this.commandService.add(CommandNames.Load);
     });
   }
 
   save() {
-    this.imageService.downloadImageMatrix(this.store.value.currentImage, 'painjs.png');
+    this.imageService.downloadSimpleImage(this.store.value.currentImage, 'painjs.png');
   }
 
   undo() {

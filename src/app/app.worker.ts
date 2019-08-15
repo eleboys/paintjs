@@ -2,6 +2,7 @@
 import { ImageProcessingService } from './services/image-processing/image-processing.service';
 import { ActionCommand } from './models/action-command.model';
 import { CommandNames } from './models/command-names.enum';
+import { SimpleImage } from './models/simple-image.model';
 
 const imgProcessService = new ImageProcessingService();
 
@@ -11,8 +12,9 @@ function onmessage(e) {
   const command = e.data as ActionCommand;
 
   const action = actionFactory(command.name);
-  const imgMatrix = action(command.matrix);
-  postMessage({ matrix: imgMatrix, command });
+  command.image = Object.assign(new SimpleImage(0, 0), command.image);
+  const image = action(command.image);
+  postMessage({ image, command });
 }
 
 function actionFactory(name) {

@@ -4,6 +4,7 @@ import { ActionCommand } from 'src/app/models/action-command.model';
 import { PaintJsStore } from '../store/paintjs-store';
 import { CommandNames } from 'src/app/models/command-names.enum';
 import { ImageMatrix } from 'src/app/models/image-matrix.model';
+import { SimpleImage } from 'src/app/models/simple-image.model';
 
 @Injectable()
 export class ActionCommandService {
@@ -12,8 +13,9 @@ export class ActionCommandService {
     private workerService: WebWorkerService,
     private store: PaintJsStore) {
     this.workerService.subject.subscribe(data => {
-      this.store.set('currentImage', data.matrix);
-      this.updateCommandOnStore(data.command, data.matrix);
+      const image = Object.assign(new SimpleImage(0, 0), data.image);
+      this.store.set('currentImage', image);
+      this.updateCommandOnStore(data.command, image);
     });
   }
 
@@ -45,7 +47,7 @@ export class ActionCommandService {
       return;
     }
     this.store.set('activeCommandId', command.id);
-    this.store.set('currentImage', command.matrix);
+    this.store.set('currentImage', command.image);
   }
 
   redo() {
@@ -59,16 +61,16 @@ export class ActionCommandService {
 
     const command = stack[index + 1];
     this.store.set('activeCommandId', command.id);
-    this.store.set('currentImage', command.matrix);
+    this.store.set('currentImage', command.image);
   }
 
-  private updateCommandOnStore(command: ActionCommand, matrix: ImageMatrix) {
+  private updateCommandOnStore(command: ActionCommand, simage: SimpleImage) {
     const commandStack = this.store.value.commandStack;
     const index = commandStack.findIndex(c => c.id === command.id);
     if (index < 0) {
       return;
     }
-    commandStack[index].matrix = matrix;
-    this.store.set('commandStack', commandStack)
+    commandStack[index].image = simage;
+    this.store.set('commandStack', commandStack);
   }
 }

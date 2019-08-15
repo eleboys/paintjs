@@ -1,173 +1,120 @@
 import { ImageMatrix } from 'src/app/models/image-matrix.model';
+import { SimpleImage } from 'src/app/models/simple-image.model';
+import { Color } from 'src/app/models/color.model';
+import { Pixel } from 'src/app/models/pixel.model';
 
 export class ImageProcessingService {
 
   constructor() { }
 
-
-  matrixToImageData(matrix) {
-    const data = new Uint8ClampedArray(matrix.width * matrix.height * 4);
-    for (let y = 0; y < matrix.height; y++) {
-      for (let x = 0; x < matrix.width; x++) {
-        const color = matrix.data[y][x];
-        data[x * 4 + y * matrix.width * 4 + 0] = (color.r);
-        data[x * 4 + y * matrix.width * 4 + 1] = (color.g);
-        data[x * 4 + y * matrix.width * 4 + 2] = (color.b);
-        data[x * 4 + y * matrix.width * 4 + 3] = (color.a);
+  simpleImageToImageData(image: SimpleImage) {
+    const data = new Uint8ClampedArray(image.width * image.height * 4);
+    for (let y = 0; y < image.height; y++) {
+      for (let x = 0; x < image.width; x++) {
+        const color = image.getPixel(x, y).color;
+        data[x * 4 + y * image.width * 4 + 0] = (color.r);
+        data[x * 4 + y * image.width * 4 + 1] = (color.g);
+        data[x * 4 + y * image.width * 4 + 2] = (color.b);
+        data[x * 4 + y * image.width * 4 + 3] = 255;
       }
     }
 
-    return new ImageData(data, matrix.width, matrix.height);
+    return new ImageData(data, image.width, image.height);
   }
 
 
-  imageDataToImageMatrix(imgData) {
-    const matrix = [];
+  imageDataToSimpleImage(imgData): SimpleImage {
+    const simage = new SimpleImage(imgData.width, imgData.height);
     for (let y = 0; y < imgData.height; y++) {
-      const row = [];
       for (let x = 0; x < imgData.width; x++) {
         const i = x * 4 + y * imgData.width * 4;
-        row.push({
-          r: imgData.data[i],
-          g: imgData.data[i + 1],
-          b: imgData.data[i + 2],
-          a: imgData.data[i + 3],
-        });
+        simage.setPixelColor(x, y, new Color(
+          imgData.data[i],
+          imgData.data[i + 1],
+          imgData.data[i + 2],
+        ));
       }
-      matrix.push(row);
     }
-    return new ImageMatrix(imgData.width, imgData.height, matrix);
+    return simage;
   }
 
 
-  getMatrixMeanColor(matrix) {
+  calculateMeanColor(pixels: Pixel[]): Color {
     // tslint:disable-next-line: one-variable-per-declaration
-    let r = 0, g = 0, b = 0, a = 0;
-    // tslint:disable-next-line: one-variable-per-declaration
-    const height = matrix.height,
-      width = matrix.width,
-      dim = height * width;
-    for (let i = 0; i < width; i++) {
-      for (let j = 0; j < height; j++) {
-        r += matrix.data[j][i].r;
-        g += matrix.data[j][i].g;
-        b += matrix.data[j][i].b;
-        a += matrix.data[j][i].a;
-      }
-    }
-    return {
-      r: Math.floor(r / dim),
-      g: Math.floor(g / dim),
-      b: Math.floor(b / dim),
-      a: a / dim
-    };
-  }
+    let r = 0, g = 0, b = 0;
 
-  getMatrixMeanColorName(matrix) {
-    const color = this.getMatrixMeanColor(matrix);
-    return `rgb(${color.r}, ${color.g}, ${color.b})`;
-  }
-
-  setMatrixColor(matrix, color, x1, y1, x2, y2) {
-    if (!x2 || !y2) {
-      matrix.data[y1][x1] = color;
-      return;
+    for (const p of pixels) {
+      r += p.color.r;
+      g += p.color.g;
+      b += p.color.b;
     }
 
-    for (let y = y1; y < y2; y++) {
-      for (let x = x1; x < x2; x++) {
-        matrix.data[y][x] = color;
-      }
-    }
+    return new Color(
+      Math.floor(r / pixels.length),
+      Math.floor(g / pixels.length),
+      Math.floor(b / pixels.length)
+    );
   }
 
-  cropImageMatrix(matrix, x1, y1, x2, y2) {
-    x1 = x1 <= 0 ? 0 : x1;
-    y1 = y1 <= 0 ? 0 : y1;
-    x2 = x2 <= matrix.width ? x2 : matrix.width;
-    y2 = y2 <= matrix.height ? y2 : matrix.height;
-
-    const sub = [];
-    for (let y = y1; y < y2; y++) {
-      const row = [];
-      for (let x = x1; x < x2; x++) {
-        row.push(matrix.data[y][x]);
-      }
-      sub.push(row);
-    }
-    return new ImageMatrix(x2 - x1, y2 - y1, sub);
-  }
-
-  invertFilter(imgMatrix) {
-    const imgW = imgMatrix.width;
-    const imgH = imgMatrix.height;
-    const matrix = imgMatrix.data.slice(0);
-
-    for (let y = 0; y < imgH; y++) {
-      for (let x = 0; x < imgW; x++) {
-        const color = matrix[y][x];
+  invertFilter(simage: SimpleImage): SimpleImage {
+    for (let y = 0; y < simage.height; y++) {
+      for (let x = 0; x < simage.width; x++) {
+        const color = simage.getPixel(x, y).color;
         color.r = 255 - color.r;
         color.g = 255 - color.g;
         color.b = 255 - color.b;
       }
     }
 
-    return new ImageMatrix(imgW, imgH, matrix);
+    return simage;
   }
 
-  grayScaleFilter(matrix: ImageMatrix) {
-    for (let y = 0; y < matrix.height; y++) {
-      for (let x = 0; x < matrix.width; x++) {
-        const color = matrix.data[y][x];
+  grayScaleFilter(simage: SimpleImage): SimpleImage {
+    for (let y = 0; y < simage.height; y++) {
+      for (let x = 0; x < simage.width; x++) {
+        const color = simage.getPixel(x, y).color;
         const avg = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
         color.r = color.g = color.b = Math.floor(avg);
-        matrix.data[y][x] = color;
       }
     }
 
-    return new ImageMatrix(matrix.width, matrix.height, matrix.data);
+    return simage;
   }
 
-  blurFilter(imgMatrix) {
+  blurFilter(simage: SimpleImage): SimpleImage{
     const blurThreshold = 4;
-    const imgW = imgMatrix.width;
-    const imgH = imgMatrix.height;
-    const matrix = imgMatrix.data; //.slice(0);
 
-    for (let y = 0; y < imgH; y++) {
-      for (let x = 0; x < imgW; x++) {
-        const data = this.cropImageMatrix(imgMatrix, x - blurThreshold, y - blurThreshold, x + blurThreshold, y + blurThreshold);
-        const color = this.getMatrixMeanColor(data);
-        matrix[y][x] = color;
+    for (let y = 0; y < simage.height; y++) {
+      for (let x = 0; x < simage.width; x++) {
+        const data = simage.getPixels(x - blurThreshold, y - blurThreshold, x + blurThreshold, y + blurThreshold);
+        const color = this.calculateMeanColor(data);
+        simage.setPixelColor(x, y, color);
       }
     }
 
-    return new ImageMatrix(imgW, imgH, matrix);
+    return simage;
   }
 
-  pixelateFilter(imgMatrix) {
+  pixelateFilter(simage: SimpleImage): SimpleImage {
     // tslint:disable-next-line: one-variable-per-declaration
     const pw = 15,
-      ph = 15,
-      imgW = imgMatrix.width,
-      imgH = imgMatrix.height,
-      matrix = imgMatrix;
+      ph = 15;
 
-    for (let j = 0; j < imgH; j = j + ph) {
-      for (let i = 0; i < imgW; i = i + pw) {
+    for (let j = 0; j < simage.height; j = j + ph) {
+      for (let i = 0; i < simage.width; i = i + pw) {
         // tslint:disable-next-line: one-variable-per-declaration
-        const w = i + pw > imgW ? imgW : i + pw,
-          h = j + ph > imgH ? imgH : j + ph;
-        const data = this.cropImageMatrix(matrix, i, j, w, h);
-        const color = this.getMatrixMeanColor(data);
-        this.setMatrixColor(matrix, color, i, j, w, h);
+        const w = i + pw > simage.width ? simage.width : i + pw,
+          h = j + ph > simage.height ? simage.height : j + ph;
+        const data = simage.getPixels(i, j, w, h);
+        const color = this.calculateMeanColor(data);
+        simage.setPixelsColor(i, j, w, h, color);
       }
     }
 
-    return matrix;
+    return simage;
   }
 
-  nullFilter(imgMatrix) {
-    return imgMatrix;
+  nullFilter(simage: SimpleImage): SimpleImage {
+    return simage;
   }
 }

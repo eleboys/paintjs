@@ -3,6 +3,7 @@ import { Observable, from } from 'rxjs';
 import { ImageMatrix } from 'src/app/models/image-matrix.model';
 import { map } from 'rxjs/operators';
 import { ImageProcessingService } from '../image-processing/image-processing.service';
+import { SimpleImage } from 'src/app/models/simple-image.model';
 
 @Injectable()
 export class ImageService {
@@ -10,7 +11,7 @@ export class ImageService {
   constructor(private imageProcessingService: ImageProcessingService) {
   }
 
-  blobToImageMatrix(blob: Blob): Observable<ImageMatrix> {
+  blobToSimpleImage(blob: Blob): Observable<SimpleImage> {
     return from(createImageBitmap(blob)).pipe(map(bmp => {
       const rect = this.getDrawingRect(bmp.width, bmp.height);
       const canvas = document.createElement('canvas');
@@ -19,24 +20,24 @@ export class ImageService {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(bmp, rect.x1, rect.y1, rect.x2, rect.y2);
       const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      return this.imageProcessingService.imageDataToImageMatrix(imgData);
+      return this.imageProcessingService.imageDataToSimpleImage(imgData);
     }));
   }
 
-  imageMatrixDataURL(matrix: ImageMatrix): string {
-    const imageData = this.imageProcessingService.matrixToImageData(matrix);
+  simpleImageDataURL(simage: SimpleImage): string {
+    const imageData = this.imageProcessingService.simpleImageToImageData(simage);
     const canvas = document.createElement('canvas');
-    canvas.width = matrix.width;
-    canvas.height = matrix.height;
+    canvas.width = simage.width;
+    canvas.height = simage.height;
     const ctx = canvas.getContext('2d');
     ctx.putImageData(imageData, 0, 0);
     return canvas.toDataURL();
   }
 
-  downloadImageMatrix(matrix: ImageMatrix, fileName: string) {
+  downloadSimpleImage(simage: SimpleImage, fileName: string) {
     const link = document.createElement('a');
     link.setAttribute('download', fileName);
-    link.setAttribute('href', this.imageMatrixDataURL(matrix));
+    link.setAttribute('href', this.simpleImageDataURL(simage));
     link.click();
   }
 

@@ -5,11 +5,12 @@ import { PaintJsState } from '../../models/paintjs-state.interface';
 import { BaseStore } from './base-store';
 import { ImageMatrix } from 'src/app/models/image-matrix.model';
 import { CommandNames } from 'src/app/models/command-names.enum';
+import { SimpleImage } from 'src/app/models/simple-image.model';
 
-const nullMatrix = new ImageMatrix(0, 0, []);
+const nullImage = new SimpleImage(0, 0);
 const state: PaintJsState = {
-    currentImage: nullMatrix,
-    commandStack: [{ id: 'c0', name: CommandNames.Null, params: null, matrix: nullMatrix }],
+    currentImage: nullImage,
+    commandStack: [{ id: 'c0', name: CommandNames.Null, params: null, image: nullImage }],
     activeCommandId: 'c0'
 };
 

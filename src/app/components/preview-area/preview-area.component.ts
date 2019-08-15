@@ -3,6 +3,7 @@ import { PaintJsStore } from 'src/app/services/store/paintjs-store';
 
 import { ImageMatrix } from 'src/app/models/image-matrix.model';
 import { ImageProcessingService } from 'src/app/services/image-processing/image-processing.service';
+import { SimpleImage } from 'src/app/models/simple-image.model';
 
 @Component({
   selector: 'pjs-preview-area',
@@ -22,15 +23,15 @@ export class PreviewAreaComponent implements OnInit {
   }
 
   private subscribeToObservables(store: PaintJsStore) {
-    store.select('currentImage').subscribe((matrix: ImageMatrix) => {
-      if (!matrix || matrix.width === 0) {
+    store.select('currentImage').subscribe((simage: SimpleImage) => {
+      if (!simage || simage.width === 0) {
         return;
       }
       const canvas = (this.canvasRef.nativeElement as HTMLCanvasElement);
-      canvas.width = matrix.width;
-      canvas.height = matrix.height;
+      canvas.width = simage.width;
+      canvas.height = simage.height;
       const ctx = canvas.getContext('2d');
-      ctx.putImageData(this.imageService.matrixToImageData(matrix), 0, 0);
+      ctx.putImageData(this.imageService.simpleImageToImageData(simage), 0, 0);
     });
   }
 
