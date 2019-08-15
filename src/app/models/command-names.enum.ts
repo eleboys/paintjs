@@ -4,5 +4,7 @@ export enum CommandNames {
     Pixelate = 'pixelate',
     Blur = 'blur',
     Invert = 'invert',
-    GrayScale = 'grayscale'
+    GrayScale = 'grayscale',
+    Sharpen = 'sharpen',
+    ThreeD = 'threeD'
 }

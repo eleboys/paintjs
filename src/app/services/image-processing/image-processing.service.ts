@@ -39,20 +39,24 @@ export class ImageProcessingService {
   }
 
 
-  calculateMeanColor(pixels: Pixel[]): Color {
+  calculateMeanColor(pixels: Pixel[], weights: number[]): Color {
     // tslint:disable-next-line: one-variable-per-declaration
     let r = 0, g = 0, b = 0;
+    const pl = pixels.length;
+    const wl = weights.length;
 
-    for (const p of pixels) {
-      r += p.color.r;
-      g += p.color.g;
-      b += p.color.b;
+    for (let i = 0; i < pixels.length; i++) {
+      const p = pixels[i];
+      const w = wl > pl ? (1 / pl) : weights[i];
+      r += p.color.r * w;
+      g += p.color.g * w;
+      b += p.color.b * w;
     }
 
     return new Color(
-      Math.floor(r / pixels.length),
-      Math.floor(g / pixels.length),
-      Math.floor(b / pixels.length)
+      Math.min(Math.max(Math.floor(r), 0), 255),
+      Math.min(Math.max(Math.floor(g), 0), 255),
+      Math.min(Math.max(Math.floor(b), 0), 255)
     );
   }
 
@@ -81,33 +85,51 @@ export class ImageProcessingService {
     return simage;
   }
 
-  blurFilter(simage: SimpleImage): SimpleImage{
-    const blurThreshold = 4;
+  private convolute(simage: SimpleImage, weights: number[], mix: number) {
+    const side = Math.round(Math.sqrt(weights.length));
+    const halfSide = Math.floor(side / 2);
+    const dstImage = new SimpleImage(simage.width, simage.height);
 
     for (let y = 0; y < simage.height; y++) {
       for (let x = 0; x < simage.width; x++) {
-        const data = simage.getPixels(x - blurThreshold, y - blurThreshold, x + blurThreshold, y + blurThreshold);
-        const color = this.calculateMeanColor(data);
-        simage.setPixelColor(x, y, color);
+        const data = simage.getPixels(x - halfSide, y - halfSide, x + halfSide + 1, y + halfSide + 1);
+        const color = this.calculateMeanColor(data, weights);
+        const scolor = simage.getPixel(x, y).color;
+        color.r = color.r * mix + scolor.r * (1 - mix);
+        color.g = color.g * mix + scolor.g * (1 - mix);
+        color.b = color.b * mix + scolor.b * (1 - mix);
+        dstImage.setPixelColor(x, y, color);
       }
     }
 
-    return simage;
+    return dstImage;
+  }
+
+  blurFilter(simage: SimpleImage): SimpleImage {
+    return this.convolute(simage, Array(25).fill(1 / 25), 1);
+  }
+
+  sharpenFilter(simage: SimpleImage): SimpleImage {
+    const weights = [0, -1,  0, -1,  5, -1, 0, -1,  0];
+    return this.convolute(simage, weights, 1);
+  }
+
+  threeDFilter(simage: SimpleImage): SimpleImage {
+    const weights = [1, 1,  1, 1,  0.7, -1, -1, -1,  -1];
+    return this.convolute(simage, weights, 1);
   }
 
   pixelateFilter(simage: SimpleImage): SimpleImage {
     // tslint:disable-next-line: one-variable-per-declaration
     const pw = 15,
-      ph = 15;
+          ph = 15,
+          weights = Array(pw * ph).fill(1 / (pw * ph));
 
     for (let j = 0; j < simage.height; j = j + ph) {
       for (let i = 0; i < simage.width; i = i + pw) {
-        // tslint:disable-next-line: one-variable-per-declaration
-        const w = i + pw > simage.width ? simage.width : i + pw,
-          h = j + ph > simage.height ? simage.height : j + ph;
-        const data = simage.getPixels(i, j, w, h);
-        const color = this.calculateMeanColor(data);
-        simage.setPixelsColor(i, j, w, h, color);
+        const data = simage.getPixels(i, j, i + pw, j + ph);
+        const color = this.calculateMeanColor(data, weights);
+        simage.setPixelsColor(i, j, i + pw, j + ph, color);
       }
     }
 

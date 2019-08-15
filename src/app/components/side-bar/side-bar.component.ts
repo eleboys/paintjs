@@ -22,6 +22,12 @@ export class SideBarComponent implements OnInit {
   }, {
     id: CommandNames.GrayScale,
     name: 'Gray Scale'
+  }, {
+    id: CommandNames.Sharpen,
+    name: 'Sharpen'
+  }, {
+    id: CommandNames.ThreeD,
+    name: '3D'
   }];
 
   constructor(private commandService: ActionCommandService) {

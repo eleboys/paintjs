@@ -17,6 +17,12 @@ export class SimpleImage {
         }
     }
 
+    clone() {
+        const sclone = new SimpleImage(this.width, this.height);
+        sclone.pixels = this.pixels.slice(0);
+        return sclone;
+    }
+
     getPixel(x: number, y: number): Pixel {
         return this.pixels[y * this.width + x];
     }
