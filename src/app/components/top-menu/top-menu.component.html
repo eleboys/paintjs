@@ -1,14 +1,19 @@
-<div class="top-menu flex">
-    <button (click)="openFileExplorer()">Open</button>
-
-    <input type="file" 
-            class="hide" 
-            accept="image/png, image/jpeg"
-            (change)="onFileSelected($event)"
-            #fileExplorer>
-    <span> | </span>
-    <button (click)='undo()' [disabled]="!canUndo">Undo</button>
-    <button (click)='redo()' [disabled]="!canRedo">Redo</button>
-    <span> | </span>
-    <button (click)="save()" [disabled]="(currentImage$|async).width === 0">Save</button>
+<div class="top-menu flex justify-between">
+    <div class="flex items-center">
+        <span class="pl1 caps">PaintJs</span>
+    </div>
+    <div class="flex">
+        <button (click)="openFileExplorer()">Open</button>
+    
+        <input type="file" 
+                class="hide" 
+                accept="image/png, image/jpeg"
+                (change)="onFileSelected($event)"
+                #fileExplorer>
+        <div class="separator"></div>
+        <button (click)='undo()' [disabled]="!canUndo">Undo</button>
+        <button (click)='redo()' [disabled]="!canRedo" class="ml1">Redo</button>
+        <div class="separator"></div>
+        <button (click)="save()" [disabled]="(currentImage$|async).width === 0">Save</button>
+    </div>
 </div>

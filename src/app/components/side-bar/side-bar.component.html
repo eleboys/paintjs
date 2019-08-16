@@ -1,3 +1,4 @@
-<div class="side-bar flex flex-column justify-center">
+<div class="side-bar flex flex-column">
+    <span class="center mt1">Filters</span>
     <button *ngFor="let c of commands" (click)="command(c.id)">{{c.name}}</button>
 </div>

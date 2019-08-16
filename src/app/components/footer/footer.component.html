@@ -1,11 +1,8 @@
 <div class="footer flex justify-between">
-    <div>
-        <span>PaintJs</span>
-    </div>
-    <div>
+    <div class="flex items-center">
         <span>Author: Nima Baghdadi</span>
     </div>
-    <div>
+    <div class="flex items-center">
         <span *ngIf="(currentImage$|async).width>0">Size: {{(currentImage$|async).width}}px * {{(currentImage$|async).height}}px</span>
     </div>
 </div>

@@ -1,4 +1,11 @@
 .top-menu {
     height: 40px;
-    background-color: #ddd;
+    padding: 5px;
+    background-color: #eee;
+
+    .separator {
+        width: 0px;
+        margin: 0 .5rem;
+        border: solid .5px #aaa;
+    }
 }
