@@ -11,6 +11,7 @@ import { ImageService } from './services/image/image.service';
 import { WebWorkerService } from './services/web-worker/web-worker.service';
 import { ImageProcessingService } from './services/image-processing/image-processing.service';
 import { ActionCommandService } from './services/action-command/action-command.service';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ActionCommandService } from './services/action-command/action-command.s
     TopMenuComponent,
     SideBarComponent,
     PreviewAreaComponent,
-    FooterComponent
+    FooterComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ActionCommandService } from 'src/app/services/action-command/action-command.service';
 import { CommandNames } from 'src/app/models/command-names.enum';
+import { PaintJsStore } from 'src/app/services/store/paintjs-store';
 
 @Component({
   selector: 'pjs-side-bar',
@@ -30,7 +31,11 @@ export class SideBarComponent implements OnInit {
     name: '3D'
   }];
 
-  constructor(private commandService: ActionCommandService) {
+  currentImage$ = this.store.select('currentImage');
+  inProgress$ = this.store.select('inProgress');
+
+  constructor(private commandService: ActionCommandService,
+              private store: PaintJsStore) {
   }
 
   ngOnInit() {

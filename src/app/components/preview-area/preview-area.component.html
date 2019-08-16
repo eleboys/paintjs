@@ -1,3 +1,6 @@
 <div class="preview-area flex justify-center items-center border">
     <canvas class="" width="0" height="0" #previewCanvas></canvas>
+    <div *ngIf="inProgress$|async" class="loader-container">
+        <pjs-loader></pjs-loader>
+    </div>
 </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, from } from 'rxjs';
-import { ImageMatrix } from 'src/app/models/image-matrix.model';
 import { map } from 'rxjs/operators';
+
 import { ImageProcessingService } from '../image-processing/image-processing.service';
 import { SimpleImage } from 'src/app/models/simple-image.model';
 

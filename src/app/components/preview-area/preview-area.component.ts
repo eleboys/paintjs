@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { PaintJsStore } from 'src/app/services/store/paintjs-store';
 
-import { ImageMatrix } from 'src/app/models/image-matrix.model';
 import { ImageProcessingService } from 'src/app/services/image-processing/image-processing.service';
 import { SimpleImage } from 'src/app/models/simple-image.model';
 
@@ -16,6 +15,7 @@ export class PreviewAreaComponent implements OnInit {
   canvasRef: ElementRef;
 
   commandStack$ = this.store.select('commandStack');
+  inProgress$ = this.store.select('inProgress');
 
   constructor(private store: PaintJsStore,
               private imageService: ImageProcessingService) {

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+
 import { WebWorkerService } from '../web-worker/web-worker.service';
 import { ActionCommand } from 'src/app/models/action-command.model';
 import { PaintJsStore } from '../store/paintjs-store';
 import { CommandNames } from 'src/app/models/command-names.enum';
-import { ImageMatrix } from 'src/app/models/image-matrix.model';
 import { SimpleImage } from 'src/app/models/simple-image.model';
 
 @Injectable()
@@ -15,6 +15,7 @@ export class ActionCommandService {
     this.workerService.subject.subscribe(data => {
       const image = Object.assign(new SimpleImage(0, 0), data.image);
       this.store.set('currentImage', image);
+      this.store.set('inProgress', false);
       this.updateCommandOnStore(data.command, image);
     });
   }
@@ -22,6 +23,7 @@ export class ActionCommandService {
   execute(name: CommandNames, params?: any) {
     const command = this.add(name, params);
     this.workerService.post(command);
+    this.store.set('inProgress', true);
   }
 
   add(name: CommandNames, params?: any): ActionCommand {

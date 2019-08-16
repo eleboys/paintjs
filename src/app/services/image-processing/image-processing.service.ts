@@ -1,4 +1,3 @@
-import { ImageMatrix } from 'src/app/models/image-matrix.model';
 import { SimpleImage } from 'src/app/models/simple-image.model';
 import { Color } from 'src/app/models/color.model';
 import { Pixel } from 'src/app/models/pixel.model';

@@ -5,4 +5,5 @@ export interface PaintJsState {
     currentImage: SimpleImage;
     commandStack: ActionCommand[];
     activeCommandId: string;
+    inProgress: boolean;
 }

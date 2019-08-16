@@ -1,4 +1,6 @@
 <div class="side-bar flex flex-column">
     <span class="center mt1">Filters</span>
-    <button *ngFor="let c of commands" (click)="command(c.id)">{{c.name}}</button>
+    <button *ngFor="let c of commands"
+            [disabled]="!(currentImage$|async).width || (inProgress$|async)"
+            (click)="command(c.id)">{{c.name}}</button>
 </div>
