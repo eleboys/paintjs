@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SideBarComponent } from './side-bar.component';
+import { PaintJsStore } from 'src/app/services/store/paintjs-store';
+import { AppModule } from 'src/app/app.module';
 
 describe('SideBarComponent', () => {
   let component: SideBarComponent;
@@ -8,7 +10,7 @@ describe('SideBarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SideBarComponent ]
+      imports: [ AppModule ]
     })
     .compileComponents();
   }));

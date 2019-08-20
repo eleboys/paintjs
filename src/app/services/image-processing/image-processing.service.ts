@@ -119,10 +119,9 @@ export class ImageProcessingService {
   }
 
   pixelateFilter(simage: SimpleImage): SimpleImage {
-    // tslint:disable-next-line: one-variable-per-declaration
-    const pw = 15,
-          ph = 15,
-          weights = Array(pw * ph).fill(1 / (pw * ph));
+    const pw = simage.width < 15 ? 15 : 1;
+    const ph = simage.height < 15 ? 15 : 1;
+    const weights = Array(pw * ph).fill(1 / (pw * ph));
 
     for (let j = 0; j < simage.height; j = j + ph) {
       for (let i = 0; i < simage.width; i = i + pw) {

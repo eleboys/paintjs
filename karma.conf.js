@@ -26,6 +26,12 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
+    customLaunchers: {
+      chrome_enabled_platform_features: {
+        base: 'Chrome',
+        flags: ['--enable-experimental-web-platform-features']
+      }
+    },
     singleRun: false,
     restartOnFileChange: true
   });

@@ -1,12 +1,21 @@
 import { TestBed, async } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+
 import { AppComponent } from './app.component';
+import { TopMenuComponent } from '../top-menu/top-menu.component';
+import { SideBarComponent } from '../side-bar/side-bar.component';
+import { FooterComponent } from '../footer/footer.component';
+import { PreviewAreaComponent } from '../preview-area/preview-area.component';
+import { PaintJsStore } from 'src/app/services/store/paintjs-store';
+import { ActionCommandService } from 'src/app/services/action-command/action-command.service';
+import { WebWorkerService } from 'src/app/services/web-worker/web-worker.service';
+import { AppModule } from 'src/app/app.module';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
+      imports: [ AppModule ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     }).compileComponents();
   }));
 
