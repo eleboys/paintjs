@@ -8,6 +8,9 @@ Note 1: Web worker is used in this project to handle heavy process part for expe
 
 Note 2: Angular is only used here to create a front-end for this project. main image processing algorithms and models are inside "services" and "models" folders of app.
 
+## Demo
+<https://testnwise.web.app/>
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
