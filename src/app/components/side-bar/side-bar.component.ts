@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { ActionCommandService } from 'src/app/services/action-command/action-command.service';
 import { CommandNames } from 'src/app/models/command-names.enum';
@@ -31,7 +32,7 @@ export class SideBarComponent implements OnInit {
     name: '3D'
   }];
 
-  currentImage$ = this.store.select('currentImage');
+  currentImage$ = this.store.select('currentImage') as Observable<any>;
   inProgress$ = this.store.select('inProgress');
 
   constructor(private commandService: ActionCommandService,

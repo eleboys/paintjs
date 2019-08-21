@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+
 import { PaintJsStore } from 'src/app/services/store/paintjs-store';
 
 @Component({
@@ -8,7 +10,7 @@ import { PaintJsStore } from 'src/app/services/store/paintjs-store';
 })
 export class FooterComponent implements OnInit {
 
-  currentImage$ = this.store.select('currentImage');
+  currentImage$ = this.store.select('currentImage') as Observable<any>;
 
   constructor(private store: PaintJsStore) { }
 

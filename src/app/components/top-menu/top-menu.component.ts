@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, SimpleChange } from '@angular/core';
 
 import { PaintJsStore } from 'src/app/services/store/paintjs-store';
 import { ImageService } from 'src/app/services/image/image.service';
 import { ActionCommand } from 'src/app/models/action-command.model';
 import { ActionCommandService } from 'src/app/services/action-command/action-command.service';
 import { CommandNames } from 'src/app/models/command-names.enum';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'pjs-top-menu',
@@ -16,7 +17,7 @@ export class TopMenuComponent implements OnInit {
   @ViewChild('fileExplorer', { static: true })
   fileExplorer: ElementRef;
 
-  currentImage$ = this.store.select('currentImage');
+  currentImage$ = this.store.select('currentImage') as Observable<any>;
   canUndo = false;
   canRedo = false;
 
