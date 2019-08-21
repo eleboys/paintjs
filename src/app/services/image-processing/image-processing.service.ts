@@ -119,8 +119,8 @@ export class ImageProcessingService {
   }
 
   pixelateFilter(simage: SimpleImage): SimpleImage {
-    const pw = simage.width < 15 ? 15 : 1;
-    const ph = simage.height < 15 ? 15 : 1;
+    const pw = simage.width < 15 ? 1 : 15;
+    const ph = simage.height < 15 ? 1 : 15;
     const weights = Array(pw * ph).fill(1 / (pw * ph));
 
     for (let j = 0; j < simage.height; j = j + ph) {
