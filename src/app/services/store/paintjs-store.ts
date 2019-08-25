@@ -15,8 +15,7 @@ const state: PaintJsState = {
 export class PaintJsStore extends BaseStore<PaintJsState> {
 
     constructor() {
-        super();
-        this.subject.next(state);
+        super(state);
     }
 
 }

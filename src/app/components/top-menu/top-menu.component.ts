@@ -46,7 +46,7 @@ export class TopMenuComponent implements OnInit {
   }
 
   save() {
-    this.imageService.downloadSimpleImage(this.store.value.currentImage, 'painjs.png');
+    this.imageService.downloadSimpleImage(this.store.get('currentImage'), 'painjs.png');
   }
 
   undo() {
@@ -59,7 +59,7 @@ export class TopMenuComponent implements OnInit {
 
   private subcribeToStoreChanges() {
     this.store.select('commandStack').subscribe((stack: ActionCommand[]) => {
-      const i = stack.findIndex(c => c.id === this.store.value.activeCommandId);
+      const i = stack.findIndex(c => c.id === this.store.get('activeCommandId'));
       this.canUndo = i >= 2;
       this.canRedo = i <= (stack.length - 2);
     });

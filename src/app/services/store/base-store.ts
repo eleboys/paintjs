@@ -6,8 +6,16 @@ export abstract class BaseStore<S> {
     protected subject = new BehaviorSubject<S>(null);
     protected store = this.subject.asObservable().pipe(distinctUntilChanged());
 
-    get value(): S {
+    constructor(initialState: S) {
+        this.subject.next(initialState);
+    }
+
+    protected get value(): S {
         return this.subject.value;
+    }
+
+    get(key: keyof S): any {
+        return this.value[key];
     }
 
     set(key: keyof S, value: S[keyof S]) {
@@ -17,7 +25,7 @@ export abstract class BaseStore<S> {
         });
     }
 
-    select(key: keyof S): Observable<S[keyof S]> {
+    select(key: keyof S): Observable<any> {
         return this.store.pipe(pluck(key));
     }
 }

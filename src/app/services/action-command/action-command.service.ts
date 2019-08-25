@@ -27,8 +27,9 @@ export class ActionCommandService {
   }
 
   add(name: CommandNames, params?: any): ActionCommand {
-    const stack = this.store.value.commandStack;
-    const command = new ActionCommand(name, 'c' + stack.length.toString(), this.store.value.currentImage, params);
+    const stack: ActionCommand[] = this.store.get('commandStack');
+    const image: SimpleImage = this.store.get('currentImage');
+    const command = new ActionCommand(name, 'c' + stack.length.toString(), image, params);
     stack.push(command);
     this.store.set('commandStack', stack);
     this.store.set('activeCommandId', command.id);
@@ -36,8 +37,8 @@ export class ActionCommandService {
   }
 
   undo() {
-    const stack = this.store.value.commandStack;
-    const activeCommandId = this.store.value.activeCommandId;
+    const stack: ActionCommand[] = this.store.get('commandStack');
+    const activeCommandId: string = this.store.get('activeCommandId');
 
     const index = stack.findIndex(c => c.id === activeCommandId);
     if (!activeCommandId || !index || stack.length < 2 || index < 1) {
@@ -53,8 +54,8 @@ export class ActionCommandService {
   }
 
   redo() {
-    const stack = this.store.value.commandStack;
-    const activeCommandId = this.store.value.activeCommandId;
+    const stack: ActionCommand[] = this.store.get('commandStack');
+    const activeCommandId: string = this.store.get('activeCommandId');
 
     const index = stack.findIndex(c => c.id === activeCommandId);
     if (!activeCommandId || index < 0 || stack.length <= (index + 1)) {
@@ -67,7 +68,7 @@ export class ActionCommandService {
   }
 
   private updateCommandOnStore(command: ActionCommand, simage: SimpleImage) {
-    const commandStack = this.store.value.commandStack;
+    const commandStack: ActionCommand[] = this.store.get('commandStack');
     const index = commandStack.findIndex(c => c.id === command.id);
     if (index < 0) {
       return;
