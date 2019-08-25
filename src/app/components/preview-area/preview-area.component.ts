@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { PaintJsStore } from 'src/app/services/store/paintjs-store';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 import { ImageProcessingService } from 'src/app/services/image-processing/image-processing.service';
 import { SimpleImage } from 'src/app/models/simple-image.model';
@@ -9,10 +11,11 @@ import { SimpleImage } from 'src/app/models/simple-image.model';
   templateUrl: './preview-area.component.html',
   styleUrls: ['./preview-area.component.scss']
 })
-export class PreviewAreaComponent implements OnInit {
+export class PreviewAreaComponent implements OnInit, OnDestroy {
 
   @ViewChild('previewCanvas', {static: true})
   canvasRef: ElementRef;
+  unsubscribe = new Subject<void>();
 
   commandStack$ = this.store.select('commandStack');
   inProgress$ = this.store.select('inProgress');
@@ -23,7 +26,9 @@ export class PreviewAreaComponent implements OnInit {
   }
 
   private subscribeToObservables(store: PaintJsStore) {
-    store.select('currentImage').subscribe((simage: SimpleImage) => {
+    store.select('currentImage')
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((simage: SimpleImage) => {
       if (!simage || simage.width === 0) {
         return;
       }
@@ -36,5 +41,10 @@ export class PreviewAreaComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 }

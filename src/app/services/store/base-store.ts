@@ -3,29 +3,27 @@ import { pluck, distinctUntilChanged, map } from 'rxjs/operators';
 
 
 export abstract class BaseStore<S> {
-    protected subject = new BehaviorSubject<S>(null);
-    protected store = this.subject.asObservable().pipe(distinctUntilChanged());
+    protected stateKeySubjects: { [P in keyof S]: BehaviorSubject<S[P]> } = {} as any;
 
     constructor(initialState: S) {
-        this.subject.next(initialState);
-    }
-
-    protected get value(): S {
-        return this.subject.value;
+        for (const key in initialState) {
+            if (initialState.hasOwnProperty(key)) {
+                const element = initialState[key];
+                this.stateKeySubjects[key] = new BehaviorSubject<any>(element);
+            }
+        }
     }
 
     get(key: keyof S): any {
-        return this.value[key];
+        return this.stateKeySubjects[key].value;
     }
 
     set(key: keyof S, value: S[keyof S]) {
-        this.subject.next({
-            ...this.value,
-            [key]: value
-        });
+        this.stateKeySubjects[key].next(value);
     }
 
     select(key: keyof S): Observable<any> {
-        return this.store.pipe(pluck(key));
+        return this.stateKeySubjects[key]
+                    .asObservable();
     }
 }

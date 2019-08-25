@@ -31,8 +31,8 @@ export class ActionCommandService {
     const image: SimpleImage = this.store.get('currentImage');
     const command = new ActionCommand(name, 'c' + stack.length.toString(), image, params);
     stack.push(command);
-    this.store.set('commandStack', stack);
     this.store.set('activeCommandId', command.id);
+    this.store.set('commandStack', stack);
     return command;
   }
 
